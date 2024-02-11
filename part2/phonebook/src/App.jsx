@@ -43,6 +43,11 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
+    const isNameInPersons = persons.find(({name}) => name === newName)
+    if(typeof(isNameInPersons) !== "undefined"){
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
     const nameObject = {
       name: newName
     }
