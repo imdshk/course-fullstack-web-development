@@ -23,10 +23,11 @@ const Content = ({parts}) => {
 }
 
 const Total = ({parts}) => {
-  let totalExercise = 0
-  for (let part in parts) {
-    totalExercise += parts[part].exercises
-  }
+  const initialExercise = 0
+  const totalExercise = parts.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.exercises,
+    initialExercise
+  )
   return (
     <p><b>Total of {totalExercise} exercises</b></p>
   )
