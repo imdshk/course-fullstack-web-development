@@ -6,7 +6,7 @@ const Button = ({onClick, text}) => {
   )
 }
 
-const Statistic = ({type, value, isPercentage}) => {
+const StatisticLine = ({type, value, isPercentage}) => {
   if(isPercentage) {
     return (
       <p>{type} {value*100} %</p>
@@ -30,12 +30,12 @@ const Statistics = ({good, neutral, bad}) => {
 
   return(
     <>
-      <Statistic type="good" value={good} />
-      <Statistic type="neutral" value={neutral} />
-      <Statistic type="bad" value={bad} />
-      <Statistic type="all" value={allScoreValue} />
-      <Statistic type="average" value={averageScoreValue} />
-      <Statistic type="positive" value={positivePercentageScoreValue} isPercentage={true} />
+      <StatisticLine type="good" value={good} />
+      <StatisticLine type="neutral" value={neutral} />
+      <StatisticLine type="bad" value={bad} />
+      <StatisticLine type="all" value={allScoreValue} />
+      <StatisticLine type="average" value={averageScoreValue} />
+      <StatisticLine type="positive" value={positivePercentageScoreValue} isPercentage={true} />
     </>
   )
 }
