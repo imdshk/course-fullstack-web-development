@@ -6,6 +6,15 @@ const Button = ({onClick, text}) => {
   )
 }
 
+const AnecdoteParagraph = ({anecdote, vote}) => {
+  return(
+    <div>
+        {anecdote}<br />
+        has {vote} votes
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -20,6 +29,7 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [votes, setVote] = useState(new Uint8Array(anecdotes.length))
+  const [maxVote, setMaxVote] = useState(0)
 
 
   const selectRandomNumber = () => {
@@ -32,16 +42,24 @@ const App = () => {
       updatedVotes,
       updatedVotes[selected] += 1
     )
+
+    let maxIndex = 0; 
+    for (let i = 0; i < Object.keys(updatedVotes).length; i++) { 
+      if (updatedVotes[i] > updatedVotes[maxIndex]) { 
+          maxIndex = i; 
+      } 
+    }
+    setMaxVote(maxIndex)
   }
 
   return (
     <>
-      <div>
-        {anecdotes[selected]}<br />
-        has {votes[selected]} votes
-      </div>
+      <h1>Anecdote of the day</h1>
+      <AnecdoteParagraph anecdote={anecdotes[selected]} vote={votes[selected]} />
       <Button onClick={incrementVoteofAnecdote} text="vote" />
       <Button onClick={selectRandomNumber} text="next anecdote" />
+      <h1>Anecdote with most votes</h1>
+      <AnecdoteParagraph anecdote={anecdotes[maxVote]} vote={votes[maxVote]} />
     </>
   )
 }
