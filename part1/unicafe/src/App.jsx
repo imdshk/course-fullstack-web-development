@@ -9,11 +9,17 @@ const Button = ({onClick, text}) => {
 const StatisticLine = ({type, value, isPercentage}) => {
   if(isPercentage) {
     return (
-      <p>{type} {value*100} %</p>
+      <tr>
+        <td>{type}</td>
+        <td>{value*100} %</td>
+      </tr>
     )
   }
   return(
-    <p>{type} {value}</p>
+    <tr>
+      <td>{type}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
@@ -29,14 +35,16 @@ const Statistics = ({good, neutral, bad}) => {
   }
 
   return(
-    <>
-      <StatisticLine type="good" value={good} />
-      <StatisticLine type="neutral" value={neutral} />
-      <StatisticLine type="bad" value={bad} />
-      <StatisticLine type="all" value={allScoreValue} />
-      <StatisticLine type="average" value={averageScoreValue} />
-      <StatisticLine type="positive" value={positivePercentageScoreValue} isPercentage={true} />
-    </>
+    <table>
+      <tbody>
+        <StatisticLine type="good" value={good} />
+        <StatisticLine type="neutral" value={neutral} />
+        <StatisticLine type="bad" value={bad} />
+        <StatisticLine type="all" value={allScoreValue} />
+        <StatisticLine type="average" value={averageScoreValue} />
+        <StatisticLine type="positive" value={positivePercentageScoreValue} isPercentage={true} />
+        </tbody>
+    </table>
   )
 }
 
