@@ -6,7 +6,17 @@ const Button = ({onClick, text}) => {
   )
 }
 
-const Statistic = ({type, value}) => {
+const Statistic = ({type, value, isPercentage}) => {
+  if(isNaN(value)){
+    return(
+      <p>{type} --</p>
+    )
+  } else if(isPercentage) {
+    return(
+      <p>{type} {value*100} %</p>
+      )
+  }
+
   return(
     <p>{type} {value}</p>
   )
@@ -29,6 +39,10 @@ const App = () => {
     setBad(bad + 1)
   }
 
+  const allScoreValue = good + neutral + bad
+  const averageScoreValue = ((good * 1) + (bad * -1)) / allScoreValue
+  const positivePercentageScoreValue = (good / allScoreValue)
+
 
   return( 
     <>
@@ -40,6 +54,9 @@ const App = () => {
       <Statistic type="good" value={good} />
       <Statistic type="neutral" value={neutral} />
       <Statistic type="bad" value={bad} />
+      <Statistic type="all" value={allScoreValue} />
+      <Statistic type="average" value={averageScoreValue} />
+      <Statistic type="positive" value={positivePercentageScoreValue} isPercentage={true} />
     </>
     )
 }
