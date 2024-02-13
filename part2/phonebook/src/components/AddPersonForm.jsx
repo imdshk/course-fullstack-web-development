@@ -1,6 +1,6 @@
-const AddPersonForm = ({onSubmit, name, number, onNameChange, onNumberChange}) => {
+const AddPersonForm = ({onSubmit, onReset, name, number, onNameChange, onNumberChange}) => {
     return(
-        <form onSubmit={onSubmit} >
+        <form onSubmit={onSubmit} onReset={onReset} >
         <div>
             name: <input value={name} onChange={onNameChange} />
         </div>
@@ -10,6 +10,9 @@ const AddPersonForm = ({onSubmit, name, number, onNameChange, onNumberChange}) =
         <div>
             <button type="submit">
             add
+            </button>
+            <button type="reset">
+            clear
             </button>
         </div>
         </form>

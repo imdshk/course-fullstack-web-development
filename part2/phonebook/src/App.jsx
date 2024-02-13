@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import AddPersonForm from './components/AddPersonForm'
 import PersonsList from './components/PersonsList'
+import Notification from './components/Notification'
+
 import personService from './services/persons'
-import persons from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filteredName, setFilteredName] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -42,8 +43,12 @@ const App = () => {
 
     const personNameExists = persons.find(({name}) => name === newName)
     const personNumberExists = persons.find(({number}) => number === newNumber)
+    
+    // Check if person's name exists
     if(typeof(personNameExists) !== "undefined"){
+      // Check if person's number exists
       if(typeof(personNumberExists) === "undefined"){
+        // Confirm with user to update number
         if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
           personNameExists.number = newNumber
           personService
@@ -53,6 +58,12 @@ const App = () => {
               setPersons(updatedPersons.concat(response))
               setNewName('')
               setNewNumber('')
+              setNotificationMessage(
+                `Updated ${response.name}'s number to ${response.number}`
+              )
+              setTimeout(() => {
+                setNotificationMessage(null)
+              }, 5000)
             })
             .catch(error => {
               console.log(error)
@@ -66,6 +77,7 @@ const App = () => {
         }
       }
     } else {
+      // Check if person's number exists
       if(typeof(personNumberExists) !== "undefined"){
         alert(`${newNumber} is already added to phonebook`)
         return
@@ -76,12 +88,19 @@ const App = () => {
         number: newNumber
       }
 
+      // Add person
       personService
         .create(personObject)
         .then(response => {
           setPersons(persons.concat(response))
           setNewName('')
           setNewNumber('')
+          setNotificationMessage(
+            `Added ${response.name}`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
       }) 
     }
   }
@@ -93,6 +112,12 @@ const App = () => {
         .then(response => {
           const personsAfterDelete = persons.filter(person => person.id !== response.id)
           setPersons(personsAfterDelete)
+          setNotificationMessage(
+            `Deleted ${response.name}`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
         .catch(error => {
           console.log(`Person with ${person.id} is not found or already deleted from the phonebook.`)
@@ -104,13 +129,21 @@ const App = () => {
     ? persons.filter(person => person.name.toLowerCase().includes(filteredName.toLowerCase()))
     : persons
 
+  const resetForm = (event) => {
+    event.preventDefault()
+    setNewName("")
+    setNewNumber("")
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMessage} />
       filter shown with <input onChange={handleFilterChange}/>
       <h2>Add a new person</h2>
       <AddPersonForm 
-        onSubmit={addPerson} 
+        onSubmit={addPerson}
+        onReset={resetForm} 
         name={newName} 
         number={newNumber} 
         onNameChange={handleNameChange} 
