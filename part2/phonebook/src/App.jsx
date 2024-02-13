@@ -4,6 +4,7 @@ import axios from 'axios'
 import AddPersonForm from './components/AddPersonForm'
 import PersonsList from './components/PersonsList'
 import personService from './services/persons'
+import persons from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -32,7 +33,7 @@ const App = () => {
     setFilteredName(eventValue)
   }
 
-  const addName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault()
     const isNameInPersons = persons.find(({name}) => name === newName)
     if(newName === "" || newNumber === ""){
@@ -65,6 +66,21 @@ const App = () => {
       }) 
   }
 
+  const deletePerson = (person) => {
+    if(window.confirm(`Are you sure you want to delete ${person.name}?`)){
+      personService
+        .remove(person.id)
+        .then(response => {
+          console.log("person deleted")
+          const personsAfterDelete = persons.filter(person => person.id !== response.id)
+          setPersons(personsAfterDelete)
+        })
+        .catch(error => {
+          console.log(`Person with ${person.id} is not found or already deleted from the phonebook.`)
+        })
+    }
+  }
+
   const peopleToShow = (filteredName) !== ""
     ? persons.filter(person => person.name.toLowerCase().includes(filteredName.toLowerCase()))
     : persons
@@ -75,13 +91,13 @@ const App = () => {
       filter shown with <input onChange={handleFilterChange}/>
       <h2>Add a new person</h2>
       <AddPersonForm 
-        onSubmit={addName} 
+        onSubmit={addPerson} 
         name={newName} 
         number={newNumber} 
         onNameChange={handleNameChange} 
         onNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <PersonsList persons={peopleToShow} />
+      <PersonsList persons={peopleToShow} deletePerson={deletePerson} />
     </div>
   )
 }
