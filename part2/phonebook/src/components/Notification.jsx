@@ -1,21 +1,22 @@
 const Notification = ({message}) => {
+    const notificationColor = message[1] === "good" ? "green" : "red"
     const notificationStyle = {
-        color: "green",
+        color: notificationColor,
         background: "lightgray",
         fontSize: 20,
         padding: 10,
         borderStyle: "solid",
         borderRadius: 5,
-        BorderColor: "green",
+        BorderColor: notificationColor,
         marginBottom: 10
     }
-    if(message === null) {
+    if(message[0] === null) {
         return null
     }
 
     return (
         <div style={notificationStyle}>
-            {message}
+            {message[0]}
         </div>
     )
 }

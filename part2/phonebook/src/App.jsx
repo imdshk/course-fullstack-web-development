@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filteredName, setFilteredName] = useState('')
-  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState([null, null])
 
   useEffect(() => {
     personService
@@ -58,11 +58,12 @@ const App = () => {
               setPersons(updatedPersons.concat(response))
               setNewName('')
               setNewNumber('')
-              setNotificationMessage(
-                `Updated ${response.name}'s number to ${response.number}`
-              )
+              setNotificationMessage([
+                `Updated ${response.name}'s number to ${response.number}`,
+                "good"
+              ])
               setTimeout(() => {
-                setNotificationMessage(null)
+                setNotificationMessage([null, null])
               }, 5000)
             })
             .catch(error => {
@@ -95,11 +96,12 @@ const App = () => {
           setPersons(persons.concat(response))
           setNewName('')
           setNewNumber('')
-          setNotificationMessage(
-            `Added ${response.name}`
-          )
+          setNotificationMessage([
+            `Added ${response.name}`,
+            "good"
+          ])
           setTimeout(() => {
-            setNotificationMessage(null)
+            setNotificationMessage([null, null])
           }, 5000)
       }) 
     }
@@ -112,15 +114,23 @@ const App = () => {
         .then(response => {
           const personsAfterDelete = persons.filter(person => person.id !== response.id)
           setPersons(personsAfterDelete)
-          setNotificationMessage(
-            `Deleted ${response.name}`
-          )
+          setNotificationMessage([
+            `Deleted ${response.name}`,
+            "good"
+          ])
           setTimeout(() => {
-            setNotificationMessage(null)
+            setNotificationMessage([null, null])
           }, 5000)
         })
         .catch(error => {
-          console.log(`Person with ${person.id} is not found or already deleted from the phonebook.`)
+          setNotificationMessage([
+            `Information of ${person.name} has already been removed from server`,
+            "bad"
+          ])
+          setTimeout(() => {
+            setNotificationMessage([null, null])
+          }, 5000)
+          // console.log(`Person with ${person.id} is not found or already deleted from the phonebook.`)
         })
     }
   }
