@@ -37,11 +37,17 @@ function App() {
     }
   }
 
+  const handleClick = (country_cca2) => {
+    const filteredCountryData = countriesData.filter(countryData => countryData.cca2 === country_cca2)
+    setNotificationMessage(null)
+    setfilteredCountryData(filteredCountryData)
+  }
+
   return (
     <>
       <Form onChange={handleFilterChange} />
       <Notification message={notificationMessage} />
-      <CountryBody filteredCountryData={filteredCountryData} />
+      <CountryBody filteredCountryData={filteredCountryData} onClick={handleClick} />
     </>
   )
 }
