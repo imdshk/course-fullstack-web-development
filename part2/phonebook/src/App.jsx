@@ -35,35 +35,55 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const isNameInPersons = persons.find(({name}) => name === newName)
     if(newName === "" || newNumber === ""){
       alert("name or number is empty")
       return
     }
-    
-    if(typeof(isNameInPersons) !== "undefined"){
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
 
-    const isNumberInPersons = persons.find(({number}) => number === newNumber)
-    if(typeof(isNumberInPersons) !== "undefined"){
-      alert(`${newNumber} is already added to phonebook`)
-      return
-    }
+    const personNameExists = persons.find(({name}) => name === newName)
+    const personNumberExists = persons.find(({number}) => number === newNumber)
+    if(typeof(personNameExists) !== "undefined"){
+      if(typeof(personNumberExists) === "undefined"){
+        if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+          personNameExists.number = newNumber
+          personService
+            .update(personNameExists)
+            .then(response => {
+              const updatedPersons = persons.filter(person => person.id !== personNameExists.id)
+              setPersons(updatedPersons.concat(response))
+              setNewName('')
+              setNewNumber('')
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        }
+      } else {
+        const isNumberInPersons = persons.find(({number}) => number === newNumber)
+        if(typeof(isNumberInPersons) !== "undefined"){
+          alert(`${newName} with number ${newNumber} is already added to phonebook`)
+          return
+        }
+      }
+    } else {
+      if(typeof(personNumberExists) !== "undefined"){
+        alert(`${newNumber} is already added to phonebook`)
+        return
+      }
 
-    const personObject = {
-      name: newName,
-      number: newNumber
-    }
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
 
-    personService
-      .create(personObject)
-      .then(response => {
-        setPersons(persons.concat(response))
-        setNewName('')
-        setNewNumber('')
+      personService
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response))
+          setNewName('')
+          setNewNumber('')
       }) 
+    }
   }
 
   const deletePerson = (person) => {
@@ -71,7 +91,6 @@ const App = () => {
       personService
         .remove(person.id)
         .then(response => {
-          console.log("person deleted")
           const personsAfterDelete = persons.filter(person => person.id !== response.id)
           setPersons(personsAfterDelete)
         })
