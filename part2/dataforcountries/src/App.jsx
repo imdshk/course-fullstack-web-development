@@ -3,12 +3,15 @@ import { useState, useEffect } from 'react'
 import Notification from './components/Notification'
 import Form from './components/Form'
 import CountryBody from './components/CountryBody'
+
 import countriesService from './services/countries'
+import weatherService from './services/weather'
 
 function App() {
   const [countriesData, setCountriesData] = useState(null)
   const [filteredCountryData, setfilteredCountryData] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [weatherData, setWeatherData] = useState(null)
 
   useEffect(() => {
     countriesService
@@ -31,6 +34,16 @@ function App() {
     } else if (countriesDataLength === 1) {
       setNotificationMessage(null)
       setfilteredCountryData(filteredCountriesData)
+      const capital = filteredCountriesData[0].capital[0]
+      weatherService
+        .getWeather(capital)
+        .then(response => {
+          setWeatherData({
+            temp: response.temp_c,
+            wind: response.wind_kph,
+            icon: response.condition.icon
+          })
+        })
     } else {
       setNotificationMessage("No match found. Try another name")
       setfilteredCountryData(null)
@@ -41,13 +54,23 @@ function App() {
     const filteredCountryData = countriesData.filter(countryData => countryData.cca2 === country_cca2)
     setNotificationMessage(null)
     setfilteredCountryData(filteredCountryData)
+    const capital = filteredCountryData[0].capital[0]
+      weatherService
+        .getWeather(capital)
+        .then(response => {
+          setWeatherData({
+            temp: response.temp_c,
+            wind: response.wind_kph,
+            icon: response.condition.icon
+          })
+        })
   }
 
   return (
     <>
       <Form onChange={handleFilterChange} />
       <Notification message={notificationMessage} />
-      <CountryBody filteredCountryData={filteredCountryData} onClick={handleClick} />
+      <CountryBody filteredCountryData={filteredCountryData} onClick={handleClick} weatherData={weatherData} />
     </>
   )
 }

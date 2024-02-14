@@ -1,7 +1,7 @@
 import CountryList from './CountryList'
 import CountryDetails from './CountryDetails'
 
-const CountryBody = ({filteredCountryData, onClick}) => {
+const CountryBody = ({filteredCountryData, onClick, weatherData}) => {
     if(filteredCountryData){
         if(filteredCountryData.length > 1) {
             return (
@@ -17,7 +17,7 @@ const CountryBody = ({filteredCountryData, onClick}) => {
             )
         }
         return (
-            <CountryDetails countryData={filteredCountryData} />
+            <CountryDetails countryData={filteredCountryData} weatherData={weatherData} />
         )
     }
 }
