@@ -55,22 +55,28 @@ function App() {
     setNotificationMessage(null)
     setfilteredCountryData(filteredCountryData)
     const capital = filteredCountryData[0].capital[0]
-      weatherService
-        .getWeather(capital)
-        .then(response => {
-          setWeatherData({
-            temp: response.temp_c,
-            wind: response.wind_kph,
-            icon: response.condition.icon
-          })
+    weatherService
+      .getWeather(capital)
+      .then(response => {
+        setWeatherData({
+          temp: response.temp_c,
+          wind: response.wind_kph,
+          icon: response.condition.icon
         })
+    })
   }
+
+  
 
   return (
     <>
       <Form onChange={handleFilterChange} />
       <Notification message={notificationMessage} />
-      <CountryBody filteredCountryData={filteredCountryData} onClick={handleClick} weatherData={weatherData} />
+      <CountryBody 
+        filteredCountryData={filteredCountryData} 
+        onClick={handleClick} 
+        weatherData={weatherData} 
+      />
     </>
   )
 }

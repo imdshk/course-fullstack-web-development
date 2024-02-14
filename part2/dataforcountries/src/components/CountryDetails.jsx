@@ -1,5 +1,5 @@
 const CountryDetails = ({countryData, weatherData}) => {
-    if(countryData){
+    if(countryData && weatherData){
         const country = countryData[0]
         const cca2 = country.cca2
         const name = country.name.common
