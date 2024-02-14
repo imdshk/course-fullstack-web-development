@@ -41,7 +41,7 @@ const App = () => {
       return
     }
 
-    const personNameExists = persons.find(({name}) => name === newName)
+    const personNameExists = persons.find(({name}) => name.toLowerCase() === newName.toLowerCase())
     const personNumberExists = persons.find(({number}) => number === newNumber)
     
     // Check if person's name exists
@@ -93,7 +93,9 @@ const App = () => {
       personService
         .create(personObject)
         .then(response => {
-          setPersons(persons.concat(response))
+          const existingPersons = persons
+          const updatedPersons = existingPersons.concat(response)
+          setPersons(updatedPersons)
           setNewName('')
           setNewNumber('')
           setNotificationMessage([
@@ -112,10 +114,10 @@ const App = () => {
       personService
         .remove(person.id)
         .then(response => {
-          const personsAfterDelete = persons.filter(person => person.id !== response.id)
+          const personsAfterDelete = persons.filter(p => p.id !== person.id)
           setPersons(personsAfterDelete)
           setNotificationMessage([
-            `Deleted ${response.name}`,
+            `Deleted ${person.name}`,
             "good"
           ])
           setTimeout(() => {
