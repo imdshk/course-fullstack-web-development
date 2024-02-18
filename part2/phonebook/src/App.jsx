@@ -19,6 +19,15 @@ const App = () => {
       .then(response => {
         setPersons(response)
       })
+      .catch(error => {
+        setNotificationMessage([
+          error.response.data.error,
+          "bad"
+        ])
+        setTimeout(() => {
+          setNotificationMessage([null, null])
+        }, 5000)
+      })
   }, []) 
 
   const handleNameChange = (event) => {
@@ -30,8 +39,7 @@ const App = () => {
   }
 
   const handleFilterChange = (event) => {
-    const eventValue = event.target.value
-    setFilteredName(eventValue)
+    setFilteredName(event.target.value)
   }
 
   const addPerson = (event) => {
@@ -43,18 +51,18 @@ const App = () => {
 
     const personNameExists = persons.find(({name}) => name.toLowerCase() === newName.toLowerCase())
     const personNumberExists = persons.find(({number}) => number === newNumber)
-    
+    const existingPeople = Object.assign({}, personNameExists)
     // Check if person's name exists
-    if(typeof(personNameExists) !== "undefined"){
+    if(personNameExists !== undefined){
       // Check if person's number exists
-      if(typeof(personNumberExists) === "undefined"){
+      if(personNumberExists === undefined){
         // Confirm with user to update number
         if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
-          personNameExists.number = newNumber
+          existingPeople.number = newNumber
           personService
-            .update(personNameExists)
+            .update(existingPeople)
             .then(response => {
-              const updatedPersons = persons.filter(person => person.id !== personNameExists.id)
+              const updatedPersons = persons.filter(person => person.id !== existingPeople.id)
               setPersons(updatedPersons.concat(response))
               setNewName('')
               setNewNumber('')
@@ -67,10 +75,16 @@ const App = () => {
               }, 5000)
             })
             .catch(error => {
-              console.log(error)
+              setNotificationMessage([
+                error.response.data.error,
+                "bad"
+              ])
+              setTimeout(() => {
+                setNotificationMessage([null, null])
+              }, 5000)
             })
         }
-      } else {
+      } else {a
         const isNumberInPersons = persons.find(({number}) => number === newNumber)
         if(typeof(isNumberInPersons) !== "undefined"){
           alert(`${newName} with number ${newNumber} is already added to phonebook`)
@@ -141,7 +155,6 @@ const App = () => {
           setTimeout(() => {
             setNotificationMessage([null, null])
           }, 5000)
-          // console.log(`Person with ${person.id} is not found or already deleted from the phonebook.`)
         })
     }
   }
