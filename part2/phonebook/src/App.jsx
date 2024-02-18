@@ -160,7 +160,7 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
       <Notification message={notificationMessage} />
-      filter shown with <input onChange={handleFilterChange}/>
+      filter shown with <input onChange={handleFilterChange} placeholder="name" />
       <h2>Add a new person</h2>
       <AddPersonForm 
         onSubmit={addPerson}
